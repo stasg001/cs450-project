@@ -1,0 +1,11 @@
+create table tbl_fact_grants(
+        id smallint UNSIGNED
+       ,grant_number varchar(20)
+       ,title varchar(30)
+       ,source_id smallint UNSIGNED
+       ,original_amt float(7,0)
+       ,balance float(7,2)
+       ,active varchar(7) check (active in ('pending','approved', 'denied'))
+       ,administrator smallint UNSIGNED
+      constraint pk_grant_id primary key (id)
+);
