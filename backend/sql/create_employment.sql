@@ -9,6 +9,7 @@ create table tbl_fact_employment(
        ,workload smallint UNSIGNED
        ,start_date date
        ,end_date date
-    constraint pk_emplid primary key (id)
-
-)
+       constraint pk_emplid primary key (id)
+       constraint fk_student_id foreign key (student_uin)
+       reference tbl_fat_students (uin)
+);
