@@ -5,7 +5,7 @@ create table tbl_fact_employment(
        ,semester varchar(10)
        ,faculty_id smallint UNSIGNED
        ,amount float(7,0)
-       ,payment_type varchar(7) check (payment_type in ('stipend', 'salary'))
+       ,payment_type varchar(7) check (payment_type in ('STIPEND', 'SALARY'))
        ,workload smallint UNSIGNED
        ,start_date date
        ,end_date date
