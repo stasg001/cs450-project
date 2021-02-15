@@ -1,5 +1,5 @@
 create table tbl_fact_purchaes(
-        id smallint UNSIGNED
+        id smallint UNSIGNED not null auto_increment 
        ,grant_number smallint UNSIGNED
        ,_name varchar(50)
        ,qty int UNSIGNED

@@ -1,5 +1,5 @@
 create table tbl_fact_grants(
-        id smallint UNSIGNED
+        id smallint UNSIGNED not null auto_increment 
        ,grant_number varchar(20)
        ,title varchar(30)
        ,source_id smallint UNSIGNED

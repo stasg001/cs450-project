@@ -1,5 +1,5 @@
 create table tbl_fact_employment(
-        id smallint UNSIGNED
+        id smallint UNSIGNED not null auto_increment 
        ,student_uin smallint UNSIGNED
        ,_type char(3) check (_type in ('GRA', 'GTA', 'URA'))
        ,semester varchar(10)
