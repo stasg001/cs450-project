@@ -1,7 +1,7 @@
 create table tbl_fact_employment(
         id smallint UNSIGNED not null auto_increment 
        ,student_uin smallint UNSIGNED
-       ,_type char(3) check (_type in ('GRA', 'GTA', 'URA'))
+       ,etype char(3) check (_type in ('GRA', 'GTA', 'URA'))
        ,semester varchar(10)
        ,faculty_id smallint UNSIGNED
        ,amount float(7,0)

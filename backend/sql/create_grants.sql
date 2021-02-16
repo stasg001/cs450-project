@@ -7,5 +7,7 @@ create table tbl_fact_grants(
        ,balance float(7,2)
        ,active varchar(7) check (active in ('PENDING','APPROVED', 'DENIED'))
        ,administrator smallint UNSIGNED
-      constraint pk_grant_id primary key (id)
+       constraint pk_grant_id primary key (id)
+       constraint fk_gentity_id foreign key (source_id)
+       reference tbl_fact_grant_entity (id)
 );
