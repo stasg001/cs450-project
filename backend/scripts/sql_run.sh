@@ -20,7 +20,7 @@ read -s -p "Enter your password: " cmd
 host=""
 port=""
 service=""
-user="$uid"  #(whoami) # will need to change to ORA_ADM account
+user="$uid"  #(whoami) # will need to change to app_admin account
 password="$cmd" # holds password locally, but does not cache. 
 tbl=""
 col=""
