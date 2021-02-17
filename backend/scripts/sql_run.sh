@@ -30,7 +30,7 @@ col=""
 ###############################################################################
 
 #checking postgre connection
-postgre_db_statuscheck(){
+mysql_db_statuscheck(){
     echo "`date` :Checking DB connectivity...";
     echo "`date` :Trying to connect to the ODU MySQL Database..."
     echo "exit" | mysql "${user}/${password}@${host}/${service}" | grep -q "Connected to:" > /dev/null
@@ -56,6 +56,7 @@ postgre_db_statuscheck(){
 # run oracle sql function
 runpsqls() {
     echo "`date` :Checking DB and table status..."
+    mysql_db_statuscheck
     if [[ $DB_STATUS == "DOWN" ]];
     then
         echo "`date` :DB status check failed..."
