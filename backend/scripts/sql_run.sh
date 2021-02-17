@@ -29,7 +29,7 @@ col=""
 # script and sql calls
 ###############################################################################
 
-#checking postgre connection
+#checking mysql connection
 mysql_db_statuscheck(){
     echo "`date` :Checking DB connectivity...";
     echo "`date` :Trying to connect to the ODU MySQL Database..."
@@ -53,8 +53,8 @@ mysql_db_statuscheck(){
 
 
 
-# run oracle sql function
-runpsqls() {
+# run mysql function
+runmtsqls() {
     echo "`date` :Checking DB and table status..."
     mysql_db_statuscheck
     if [[ $DB_STATUS == "DOWN" ]];
@@ -81,7 +81,7 @@ runpsqls() {
 EOF
         while 
          mapfile -t meta < $file
-        psql  
+         mysql  
     else
         echo "`date` :Either the DB is down or the exit status returned by
         the script shows ERROR."
@@ -95,7 +95,7 @@ EOF
 # main function
 Main() {
     echo "`date` :Starting Sql auto run script."
-    runpsqls
+    runmysqls
     echo "`date` :Sql auto run script execution completed."
 }
 Main | tee autosql.log 
