@@ -31,23 +31,23 @@ col=""
 
 #checking mysql connection
 mysql_db_statuscheck(){
-    echo "`date` :Checking DB connectivity...";
-    echo "`date` :Trying to connect to the ODU MySQL Database..."
-    echo "exit" | mysql "${user}/${password}@${host}/${service}" | grep -q "Connected to:" > /dev/null
-    if [[ $? -eq 0 ]]
-    then
-        DB_STATUS="UP"
-        export DB_STATUS
-        echo "`date` :Status: ${DB_STATUS}. Able to Connect..."
-    else
-        DB_STATUS="DOWN"
-        export DB_STATUS
-        echo "`date` :Status: DOWN . Not able to Connect."
-        echo "`date` :Not able to connect to database with Username:
-        "${user}" HostName: ""${host}" DB Port: "${port}"." SID: "${service}"."
-        echo "`date` :Exiting Script Run..."
-        exit
-    fi
+	echo "`date` :Checking DB connectivity...";
+	echo "`date` :Trying to connect to the ODU MySQL Database..."
+	echo "exit" | mysql "${user}/${password}@${host}/${service}" | grep -q "Connected to:" > /dev/null
+	if [[ $? -eq 0 ]]
+	then
+		DB_STATUS="UP"
+		export DB_STATUS
+		echo "`date` :Status: ${DB_STATUS}. Able to Connect..."
+	else
+		DB_STATUS="DOWN"
+		export DB_STATUS
+		echo "`date` :Status: DOWN . Not able to Connect."
+		echo "`date` :Not able to connect to database with Username:
+		"${user}" HostName: ""${host}" DB Port: "${port}"." SID: "${service}"."
+		echo "`date` :Exiting Script Run..."
+		exit
+	fi
 }
 
 
@@ -55,47 +55,47 @@ mysql_db_statuscheck(){
 
 # run mysql function
 runmtsqls() {
-    echo "`date` :Checking DB and table status..."
-    mysql_db_statuscheck
-    if [[ $DB_STATUS == "DOWN" ]];
-    then
-        echo "`date` :DB status check failed..."
-        echo "`date` :Exiting bash script..."
-        exit
-    fi
-    echo "`date` :DB status check completed"
-    echo "`date` :Connecting To ${user}/******@${service}";
-    if [[ $DB_STATUS == "UP" ]]
-    then
-        for file in `dir -d $master`;
-        do
-        #for file in `cat extrasqlslist.txt` ;do
-           echo "`date`:Executing file $file...";
-           echo "`date`:__________________________________________";
-           echo "`date`:SQL OUTPUT:";
-           echo "`date`:__________________________________________";
-           mysql -s ${user}/${password}@${host}/${service}<<-EOF
-           @$file;
-           commit;
-           quit;
+	echo "`date` :Checking DB and table status..."
+	mysql_db_statuscheck
+	if [[ $DB_STATUS == "DOWN" ]];
+	then
+		echo "`date` :DB status check failed..."
+		echo "`date` :Exiting bash script..."
+		exit
+	fi
+	echo "`date` :DB status check completed"
+	echo "`date` :Connecting To ${user}/******@${service}";
+	if [[ $DB_STATUS == "UP" ]]
+	then
+		for file in `dir -d $master`;
+		do
+		#for file in `cat extrasqlslist.txt` ;do
+		   echo "`date`:Executing file $file...";
+		   echo "`date`:__________________________________________";
+		   echo "`date`:SQL OUTPUT:";
+		   echo "`date`:__________________________________________";
+		   mysql -s ${user}/${password}@${host}/${service}<<-EOF
+		   @$file;
+		   commit;
+		   quit;
 EOF
-        while 
-         mapfile -t meta < $file
-         mysql  
-    else
-        echo "`date` :Either the DB is down or the exit status returned by
-        the script shows ERROR."
-        echo "`date` :Exiting ..."
-        exit
-    fi
+		while 
+		 mapfile -t meta < $file
+		 mysql  
+	else
+		echo "`date` :Either the DB is down or the exit status returned by
+		the script shows ERROR."
+		echo "`date` :Exiting ..."
+		exit
+	fi
 }
 
 
 
 # main function
 Main() {
-    echo "`date` :Starting Sql auto run script."
-    runmysqls
-    echo "`date` :Sql auto run script execution completed."
+	echo "`date` :Starting sql auto run script."
+	runmysqls
+	echo "`date` :sql auto run script execution completed."
 }
 Main | tee autosql.log 
