@@ -1,0 +1,4 @@
+CREATE IF NOT EXISTS migrations (
+    version int UNSIGNED NOT NULL auto_increment PRIMARY KEY,
+    dateran TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+);
