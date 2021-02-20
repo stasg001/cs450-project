@@ -49,6 +49,7 @@ jobs:
         REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
         REMOTE_USER: ${{ secrets.DEPLOY_USER }}
     steps:
+      - uses: actions/checkout@v2
       - name: Push ssh key into temp file
         run: echo "this is mykey" > sshkey
       - name: Run migration on server
