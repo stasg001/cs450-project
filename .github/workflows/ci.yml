@@ -50,7 +50,7 @@ jobs:
         REMOTE_USER: ${{ secrets.DEPLOY_USER }}
     steps:
       - name: Push ssh key into temp file
-        run: echo "${{ secrets.DEPLOY_KEY }}" > sshkey
+        run: echo "this is mykey" > sshkey
       - name: Run migration on server
         run: ./scripts/sql_run.sh ${{ secrets.DB_HOST }} ${{ secrets.DB_USER }} ${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }}
 
