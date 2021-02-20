@@ -1,4 +1,4 @@
-create table tbl_fact_employment(
+create table if not exists tbl_fact_employment(
         id smallint UNSIGNED not null auto_increment 
        ,student_uin smallint UNSIGNED
        ,etype char(3) check (_type in ('GRA', 'GTA', 'URA'))

@@ -1,4 +1,4 @@
-create table tbl_fact_users(
+create table if not exists tbl_fact_users(
         id smallint UNSIGNED not null auto_increment 
        ,uname varchar(30) not null unique
        ,email varchar(15) not null unique 

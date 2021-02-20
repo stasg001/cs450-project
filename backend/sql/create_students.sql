@@ -1,4 +1,4 @@
-create table tbl_fact_student(
+create table if not exists tbl_fact_student(
         uin smallint UNSIGNED not null auto_increment 
        ,sname varchar(50)
        ,department smallint UNSIGNED

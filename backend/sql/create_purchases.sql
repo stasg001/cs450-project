@@ -1,4 +1,4 @@
-create table tbl_fact_purchaes(
+create table if not exists tbl_fact_purchaes(
         id smallint UNSIGNED not null auto_increment 
        ,grant_number smallint UNSIGNED
        ,pname varchar(50)

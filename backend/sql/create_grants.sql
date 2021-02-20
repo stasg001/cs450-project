@@ -1,4 +1,4 @@
-create table tbl_fact_grants(
+create table if not exists tbl_fact_grants(
         id smallint UNSIGNED not null auto_increment 
        ,grant_number varchar(20)
        ,title varchar(30)
