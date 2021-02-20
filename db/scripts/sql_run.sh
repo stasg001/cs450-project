@@ -46,7 +46,7 @@ runmtsqls() {
 			latest_migration=0
 		fi
 
-		for file in `ls sql`; do
+		for file in `ls ../sql`; do
 			file_migration_no=`$file |cut -c1-3`
 		   	if [[ $latest_migration -gt $file_migration_no ]] then
 				echo "`date`:Executing file $file...";
