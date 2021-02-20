@@ -42,11 +42,16 @@ jobs:
 
   migrate_database:
     runs-on: ubuntu-latest
+    run:
+        working-directory: ./db
+    env:
+        REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+        REMOTE_USER: ${{ secrets.DEPLOY_USER }}
     steps:
       - name: Push ssh key into temp file
-        run: echo "${{ secrets.DEPLOY_KEY}}" > sshkey
+        run: echo "${{ secrets.DEPLOY_KEY }}" > sshkey
       - name: Run migration on server
-        run: ssh -o StrictHostKeyChecking=no -i sshkey ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} < "DB_HOST=${{ secrets.DB_HOST }}; DB_USER=${{ secrets.DB_USER }}; DB_PASSWORD=${{ secrets.DB_PASSWORD }}; DB_NAME=${{ secrets.DB_NAME }}; ./db/scripts/sql_run.sh"
+        run: ./scripts/sql_run.sh ${{ secrets.DB_HOST }} ${{ secrets.DB_USER }} ${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }}
 
   test_backend:
     runs-on: ubuntu-latest
