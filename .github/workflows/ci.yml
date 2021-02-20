@@ -40,8 +40,25 @@ jobs:
           SOURCE: "frontend/dist/"
           TARGET: ${{ secrets.DEPLOY_TARGET }}
 
+  migrate_database:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./db
+    steps:
+      - name: Migrate SQL
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_NAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: |
+          echo ${{ secrets.DEPLOY_KEY }} > sshkey
+          ssh -i sshkey ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} < ./scripts/sql_run.sh
+
   test_backend:
     runs-on: ubuntu-latest
+    needs: migrate_database
     defaults:
       run:
         working-directory: ./api

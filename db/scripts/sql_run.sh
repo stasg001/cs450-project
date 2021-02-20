@@ -1,30 +1,10 @@
 #!bin/bash
 
+# 0: Check DB status
+# 1: Query MySql for latest migration
+# 2: Check sql dir for migrations newer than query result
+# 3..: Execute newer sql *in order*
 
-################################################################################
-# password:
-################################################################################
-
-# ask user for MySQL user id production password. The users password is not store is
-# history, and is hidden when input into command line. 
-# After defining the database and server, update environment vars for host and service. 
-
-# read -p "Enter the database name: " ora
-#read -p "Enter the service name: " sid
-read -p "Enter you userid: " uid 
-read -s -p "Enter your password: " cmd
-################################################################################
-# variables:
-################################################################################
-
-host=""
-port=""
-service=""
-user="$uid"  #(whoami) # will need to change to app_admin account
-password="$cmd" # holds password locally, but does not cache. 
-tbl=""
-col=""
-#report="./report/export_to_excel.sql"
 ################################################################################
 # script and sql calls
 ###############################################################################
@@ -33,7 +13,7 @@ col=""
 mysql_db_statuscheck(){
 	echo "`date` :Checking DB connectivity...";
 	echo "`date` :Trying to connect to the ODU MySQL Database..."
-	echo "exit" | mysql "${user}/${password}@${host}/${service}" | grep -q "Connected to:" > /dev/null
+	echo "exit" | mysql -h ${DB_HOST} -u ${DB_USER} -p ${DB_PASSWORD} ${DB_NAME} -e "SELECT 1"
 	if [[ $? -eq 0 ]]
 	then
 		DB_STATUS="UP"
@@ -46,42 +26,35 @@ mysql_db_statuscheck(){
 		echo "`date` :Not able to connect to database with Username:
 		"${user}" HostName: ""${host}" DB Port: "${port}"." SID: "${service}"."
 		echo "`date` :Exiting Script Run..."
-		exit
+		exit 1
 	fi
 }
-
-
-
 
 # run mysql function
 runmtsqls() {
 	echo "`date` :Checking DB and table status..."
+
 	mysql_db_statuscheck
-	if [[ $DB_STATUS == "DOWN" ]];
-	then
-		echo "`date` :DB status check failed..."
-		echo "`date` :Exiting bash script..."
-		exit
-	fi
+
 	echo "`date` :DB status check completed"
 	echo "`date` :Connecting To ${user}/******@${service}";
 	if [[ $DB_STATUS == "UP" ]]
 	then
-		for file in `dir -d $master`;
-		do
-		#for file in `cat extrasqlslist.txt` ;do
-		   echo "`date`:Executing file $file...";
-		   echo "`date`:__________________________________________";
-		   echo "`date`:SQL OUTPUT:";
-		   echo "`date`:__________________________________________";
-		   mysql -s ${user}/${password}@${host}/${service}<<-EOF
-		   @$file;
-		   commit;
-		   quit;
-EOF
-		while 
-		 mapfile -t meta < $file
-		 mysql  
+		# latest_migration will be an int
+		latest_migration=`mysql -h ${DB_HOST} -u ${DB_USER} -p ${DB_PASSWORD} ${DB_NAME} -se SELECT MAX(version) FROM MIGRATIONS;`
+		if [[ `$latest_migration |cut -c 1-10` -eq 'ERROR 1146' ]] then
+			latest_migration=0
+		fi
+
+		for file in `ls sql`; do
+			file_migration_no=`$file |cut -c1-3`
+		   	if [[ $latest_migration -gt $file_migration_no ]] then
+				echo "`date`:Executing file $file...";
+				echo "`date`:__________________________________________";
+				echo "`date`:SQL OUTPUT:";
+				echo "`date`:__________________________________________";
+				mysql -h ${DB_HOST} -u ${DB_USER} -p ${DB_PASSWORD} ${DB_NAME} < $file
+			fi  
 	else
 		echo "`date` :Either the DB is down or the exit status returned by
 		the script shows ERROR."
@@ -90,12 +63,10 @@ EOF
 	fi
 }
 
-
-
 # main function
 Main() {
 	echo "`date` :Starting sql auto run script."
 	runmysqls
 	echo "`date` :sql auto run script execution completed."
 }
-Main | tee autosql.log 
+Main
