@@ -53,7 +53,7 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
         run: |
-          echo ${{ secrets.DEPLOY_KEY }} > sshkey
+          echo "${{ secrets.DEPLOY_KEY }}" > sshkey
           ssh -i sshkey ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} < ./scripts/sql_run.sh
 
   test_backend:
