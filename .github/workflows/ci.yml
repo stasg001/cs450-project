@@ -42,7 +42,6 @@ jobs:
 
   migrate_database:
     runs-on: ubuntu-latest
-    defaults:
     steps:
       - name: Migrate SQL
         env:
