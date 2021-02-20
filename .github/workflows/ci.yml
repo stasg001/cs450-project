@@ -43,8 +43,6 @@ jobs:
   migrate_database:
     runs-on: ubuntu-latest
     defaults:
-      run:
-        working-directory: ./db
     steps:
       - name: Migrate SQL
         env:
@@ -53,9 +51,10 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
         run: |
+          pwd
           echo "${{ secrets.DEPLOY_KEY }}" > sshkey
-          cat sshkey
-          ssh -i sshkey ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} < ./scripts/sql_run.sh
+          ssh -i ./sshkey ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "ls -l"
+          ssh -i ./sshkey ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} < ./db/scripts/sql_run.sh
 
   test_backend:
     runs-on: ubuntu-latest
