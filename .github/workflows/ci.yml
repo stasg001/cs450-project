@@ -42,7 +42,8 @@ jobs:
 
   migrate_database:
     runs-on: ubuntu-latest
-    run:
+    defaults:
+      run:
         working-directory: ./db
     env:
         REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
