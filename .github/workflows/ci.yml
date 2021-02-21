@@ -40,7 +40,7 @@ jobs:
           SOURCE: "frontend/dist/"
           TARGET: ${{ secrets.DEPLOY_TARGET }}
 
-  migrate_database:
+  verify_migrations:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -93,14 +93,20 @@ jobs:
   deploy_backend:
     runs-on: ubuntu-latest
     needs: test_backend
-    if: ${{ github.ref == 'refs/heads/master'  && github.event_name == 'push' }}
+    env:
+      REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+      REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+    if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v2
-      - name: ssh deploy
+      - name: Migrate Prod Database
+        run: |
+          echo "${{ secrets.DEPLOY_KEY }}" > sshkey
+          chmod 600 sshkey
+          ./scripts/sql_run.sh ${{ secrets.DB_HOST}} ${{ secrets.DB_USER }} ${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }}
+      - name: Deploy Application Code
         uses: easingthemes/ssh-deploy@v2.1.5
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
-          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
           SOURCE: "api"
           TARGET: ${{ secrets.DEPLOY_TARGET }}
