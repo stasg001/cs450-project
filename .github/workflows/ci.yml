@@ -68,7 +68,7 @@ jobs:
           echo "${{ secrets.DEPLOY_KEY }}" > sshkey
           chmod 600 sshkey
       - name: Run migration on server
-        run: ./scripts/sql_run.sh ${{ secrets.DB_HOST }} root ${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }}
+        run: ./scripts/sql_run.sh localhost root ${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }}
 
   test_backend:
     runs-on: ubuntu-latest
