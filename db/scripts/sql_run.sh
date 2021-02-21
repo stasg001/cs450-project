@@ -4,7 +4,7 @@
 # 1: Query MySql for latest migration
 # 2: Check sql dir for migrations newer than query result
 # 3..: Execute newer sql *in order*
-
+ 
 ################################################################################
 # script and sql calls
 ################################################################################
@@ -14,16 +14,23 @@ DB_USER=$2
 DB_PASSWORD=$3
 DB_NAME=$4
 
-SSH_PREFIX="ssh -o StrictHostKeyChecking=no -i sshkey ${REMOTE_USER}@${REMOTE_HOST}"
-MYSQL_CLIENT="mysql -h ${DB_HOST} --protocol=tcp -u ${DB_USER} --password=${DB_PASSWORD} ${DB_NAME}"
+if [[ -z $REMOTE_HOST ]]; then
+	SSH_PREFIX=""
+	SSH_SUFFIX=""
+else
+	SSH_PREFIX="ssh -t -o StrictHostKeyChecking=no -i sshkey ${REMOTE_USER}@${REMOTE_HOST} \""
+	SSH_SUFFIX="\""
+fi
+
+MYSQL_CLIENT="mysql --protocol=tcp -h ${DB_HOST} -u ${DB_USER} --password=${DB_PASSWORD} --database=${DB_NAME}"
 
 #checking mysql connection
 mysql_db_statuscheck(){
 	echo "`date` :Checking DB connectivity...";
 	echo "`date` :Trying to connect to the ODU MySQL Database..."
-	TAIL="-e 'SELECT 1;'"
-	cmd="$SSH_PREFIX $MYSQL_CLIENT ${TAIL}"
-	$cmd
+	EXEC_SQL="-Ns --execute='SELECT 1;'"
+	cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} ${SSH_SUFFIX}"
+	bash -c "${cmd}"
 	if [[ $? -eq 0 ]]
 	then
 		DB_STATUS="UP"
@@ -51,13 +58,14 @@ runmysqls() {
 	if [[ $DB_STATUS == "UP" ]]
 	then
 		# latest_migration will be an int
-		TAIL="-se 'SELECT MAX(version) FROM migrations;'"
-		latest_migration=`$SSH_PREFIX $MYSQL_CLIENT ${TAIL} 2>&1`
-		if [[ `echo "${latest_migration}" |cut -c 1-10` == "ERROR 1146" ]]; then
+		EXEC_SQL='-Ns -e "SELECT MAX(version) FROM migrations;"'
+		cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} ${DB_NAME} ${SSH_SUFFIX}"
+		latest_migration=`sh -c "$cmd"`
+		if [[ "${latest_migration}"  == *"ERROR 1146"* ]]; then
 			echo "`date` :Running initial migration"
 			latest_migration=0
 		fi
-
+	
 		for file in `ls ./sql`; do
 			file_migration_no=`echo "$file" |cut -c1-3`
 		   	if [[ $latest_migration -lt $file_migration_no ]]; then
@@ -65,11 +73,13 @@ runmysqls() {
 				echo "`date` :__________________________________________";
 				echo "`date` :SQL OUTPUT:";
 				echo "`date` :__________________________________________";
-				TAIL="-se '`cat ./sql/${file}`'"
-				sqlout=`$SSH_PREFIX $MYSQL_CLIENT ${TAIL} 2>&1`
+				EXEC_SQL="-s --execute='`cat ./sql/${file}`'"
+				cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} 2>&1 ${SSH_SUFFIX}"
+				sqlout=`sh -c "$cmd"`
 				if [[ $? -eq 0 ]]; then 
-					TAIL="-se 'INSERT INTO migrations (version) VALUES (${file_migration_no});'"
-					`$SSH_PREFIX $MYSQL_CLIENT ${TAIL}`
+					EXEC_SQL="-s --execute='INSERT INTO migrations (version) VALUES (${file_migration_no});'"
+					cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} ${SSH_SUFFIX}"
+					bash -c "$cmd"
 				else
 					echo ${sqlout}
 					exit 1
