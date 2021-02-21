@@ -14,12 +14,16 @@ DB_USER=$2
 DB_PASSWORD=$3
 DB_NAME=$4
 
+SSH_PREFIX="ssh -o StrictHostKeyChecking=no -i sshkey ${REMOTE_USER}@${REMOTE_HOST}"
+MYSQL_CLIENT="mysql -h ${DB_HOST} --protocol=tcp -u ${DB_USER} --password=${DB_PASSWORD} ${DB_NAME}"
+
 #checking mysql connection
 mysql_db_statuscheck(){
 	echo "`date` :Checking DB connectivity...";
 	echo "`date` :Trying to connect to the ODU MySQL Database..."
 	TAIL="-e 'SELECT 1;'"
-	ssh -o StrictHostKeyChecking=no -i sshkey ${REMOTE_USER}@${REMOTE_HOST} mysql -h ${DB_HOST} -u ${DB_USER} --password=${DB_PASSWORD} ${DB_NAME} ${TAIL}
+	cmd="$SSH_PREFIX $MYSQL_CLIENT ${TAIL}"
+	$cmd
 	if [[ $? -eq 0 ]]
 	then
 		DB_STATUS="UP"
@@ -48,7 +52,7 @@ runmysqls() {
 	then
 		# latest_migration will be an int
 		TAIL="-se 'SELECT MAX(version) FROM migrations;'"
-		latest_migration=`ssh -o StrictHostKeyChecking=no -i sshkey ${REMOTE_USER}@${REMOTE_HOST} mysql -h ${DB_HOST} -u ${DB_USER} --password=${DB_PASSWORD} ${DB_NAME} ${TAIL} 2>&1`
+		latest_migration=`$SSH_PREFIX $MYSQL_CLIENT ${TAIL} 2>&1`
 		if [[ `echo "${latest_migration}" |cut -c 1-10` == "ERROR 1146" ]]; then
 			echo "`date` :Running initial migration"
 			latest_migration=0
@@ -62,10 +66,10 @@ runmysqls() {
 				echo "`date` :SQL OUTPUT:";
 				echo "`date` :__________________________________________";
 				TAIL="-se '`cat ./sql/${file}`'"
-				sqlout=`ssh -o StrictHostKeyChecking=no -i sshkey ${REMOTE_USER}@${REMOTE_HOST} mysql -h ${DB_HOST} -u ${DB_USER} --password=${DB_PASSWORD} ${DB_NAME} ${TAIL} 2>&1`
+				sqlout=`$SSH_PREFIX $MYSQL_CLIENT ${TAIL} 2>&1`
 				if [[ $? -eq 0 ]]; then 
 					TAIL="-se 'INSERT INTO migrations (version) VALUES (${file_migration_no});'"
-					ssh -o StrictHostKeyChecking=no -i sshkey ${REMOTE_USER}@${REMOTE_HOST} mysql -h ${DB_HOST} -u ${DB_USER} --password=${DB_PASSWORD} ${DB_NAME} ${TAIL}
+					`$SSH_PREFIX $MYSQL_CLIENT ${TAIL}`
 				else
 					echo ${sqlout}
 					exit 1
