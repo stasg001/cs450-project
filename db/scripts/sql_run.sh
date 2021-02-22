@@ -64,7 +64,7 @@ runmysqls() {
 
 	for file in `ls ./sql`; do
 		file_migration_no=`echo "$file" |cut -c1-3`
-		if [ $latest_migration -lt $file_migration_no ]; then
+		if [[ $((10#$latest_migration + 1 )) -lt $((10#$file_migration_no + 1)) ]]; then
 			echo "`date` :Executing migration $file_migration_no from file $file...";
 			echo "`date` :__________________________________________";
 			echo "`date` :SQL OUTPUT:";
