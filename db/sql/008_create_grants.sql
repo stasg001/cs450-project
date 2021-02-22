@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS tbl_fact_grants(
        ,source_id smallint UNSIGNED
        ,original_amt float(7,0)
        ,balance float(7,2)
-       ,active varchar(7) check (active in ('PENDING','APPROVED', 'DENIED'))
+       ,active varchar(7) check (active = 'PENDING' OR active = 'APPROVED' OR active = 'DENIED')
        ,administrator smallint UNSIGNED
 );
