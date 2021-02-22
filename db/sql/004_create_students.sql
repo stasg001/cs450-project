@@ -1,9 +1,6 @@
-create table if not exists tbl_fact_student(
-        uin smallint UNSIGNED not null auto_increment 
+CREATE TABLE IF NOT EXISTS tbl_fact_student(
+        uin smallint UNSIGNED NOT NULL auto_increment PRIMARY KEY
        ,sname varchar(50)
        ,department smallint UNSIGNED
        ,program varchar(3) check (program in ('UG', 'MS', 'PHD'))
-       constraint pk_uin primary key (uin)
-       constraint fk_depart foreign key (department)
-       reference tbl_fact_department (id) 
 );

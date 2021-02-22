@@ -1,7 +1,7 @@
-create table if not exists tbl_fact_employment(
-        id smallint UNSIGNED not null auto_increment 
+CREATE TABLE IF NOT EXISTS tbl_fact_employment(
+        id smallint UNSIGNED NOT NULL auto_increment PRIMARY KEY
        ,student_uin smallint UNSIGNED
-       ,etype char(3) check (_type in ('GRA', 'GTA', 'URA'))
+       ,etype char(3) check (etype in ('GRA', 'GTA', 'URA'))
        ,semester varchar(10)
        ,faculty_id smallint UNSIGNED
        ,amount float(7,0)
@@ -9,7 +9,4 @@ create table if not exists tbl_fact_employment(
        ,workload smallint UNSIGNED
        ,start_date date
        ,end_date date
-       constraint pk_emplid primary key (id)
-       constraint fk_student_id foreign key (student_uin)
-       reference tbl_fat_students (uin)
 );

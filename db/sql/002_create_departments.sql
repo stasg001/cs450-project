@@ -1,5 +1,4 @@
-create table if not exists tbl_fact_departments(
-            id smallint UNSIGNED  not null auto_increment
+CREATE TABLE IF NOT EXISTS tbl_fact_departments(
+            id smallint UNSIGNED  NOT NULL auto_increment PRIMARY KEY
            ,dname varchar(30)
-           constraint pk_deptid primary key (id) 
 );

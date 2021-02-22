@@ -1,7 +1,4 @@
-create table if not exists tbl_map_grant_users(
-            id smallint UNSIGNED not null auto_increment 
+CREATE TABLE IF NOT EXISTS tbl_map_grant_users(
+            id smallint UNSIGNED NOT NULL auto_increment PRIMARY KEY
            ,grant_id smallint UNSIGNED
-           constraint pk_map_id primary key (id)
-           constraint fk_grant_id foreign key 
-           reference tbl_fact_grants (id)
 );
