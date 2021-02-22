@@ -69,7 +69,7 @@ runmysqls() {
 			echo "`date` :__________________________________________";
 			echo "`date` :SQL OUTPUT:";
 			echo "`date` :__________________________________________";
-			EXEC_SQL="-s --execute='`cat ./sql/${file}`'"
+			EXEC_SQL="-s --execute=\"`cat ./sql/${file}`\""
 			cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} 2>&1 ${SSH_SUFFIX}"
 			sqlout=`sh -c "$cmd"`
 			if [[ $? -eq 0 ]]; then 

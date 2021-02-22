@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS tbl_fact_grants(
        ,source_id smallint UNSIGNED
        ,original_amt float(7,0)
        ,balance float(7,2)
-       ,active ENUM("PENDING", "APPROVED", "DENIED")
+       ,active ENUM('PENDING', 'APPROVED', 'DENIED')
        ,administrator smallint UNSIGNED
 );

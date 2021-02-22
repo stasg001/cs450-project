@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS tbl_fact_users(
        password varchar(100) NOT NULL,
        created_date Timestamp,
        update_date TimeStamp,
-       user_role ENUM("FACULTY", "ADMINISTRATOR"),
+       user_role ENUM('FACULTY', 'ADMINISTRATOR'),
        department int UNSIGNED NOT NULL,
        PRIMARY KEY(id)
 );
