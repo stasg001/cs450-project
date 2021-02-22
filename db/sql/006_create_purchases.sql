@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS tbl_fact_purchaes(
+CREATE TABLE IF NOT EXISTS tbl_fact_purchases(
         id smallint UNSIGNED NOT NULL auto_increment PRIMARY KEY
        ,grant_number smallint UNSIGNED
        ,pname varchar(50)
