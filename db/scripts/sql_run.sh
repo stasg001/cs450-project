@@ -33,12 +33,8 @@ mysql_db_statuscheck(){
 	bash -c "${cmd}"
 	if [[ $? -eq 0 ]]
 	then
-		DB_STATUS="UP"
-		export DB_STATUS
-		echo "`date` :Status: ${DB_STATUS}. Able to Connect..."
+		echo "`date` :Status: UP. Able to Connect..."
 	else
-		DB_STATUS="DOWN"
-		export DB_STATUS
 		echo "`date` :Status: DOWN . Not able to Connect."
 		echo "`date`:Not able to connect to database with Username:
 		"${DB_USER}" HostName: ""${DB_HOST}" " SID: "${DB_NAME}"."
@@ -51,47 +47,41 @@ mysql_db_statuscheck(){
 runmysqls() {
 	echo "`date` :Checking DB and table status..."
 
+	# Exits if failure
 	mysql_db_statuscheck
 
 	echo "`date` :DB status check completed"
 	echo "`date` :Connecting To ${DB_USER}/******@${DB_NAME}";
-	if [[ $DB_STATUS == "UP" ]]
-	then
-		# latest_migration will be an int
-		EXEC_SQL='-Ns -e "SELECT MAX(version) FROM migrations;"'
-		cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} ${DB_NAME} ${SSH_SUFFIX}"
-		latest_migration=`sh -c "$cmd"`
-		if [[ "${latest_migration}"  == *"ERROR 1146"* ]]; then
-			echo "`date` :Running initial migration"
-			latest_migration=0
-		fi
 	
-		for file in `ls ./sql`; do
-			file_migration_no=`echo "$file" |cut -c1-3`
-		   	if [[ $latest_migration -lt $file_migration_no ]]; then
-				echo "`date` :Executing migration $file_migration_no from file $file...";
-				echo "`date` :__________________________________________";
-				echo "`date` :SQL OUTPUT:";
-				echo "`date` :__________________________________________";
-				EXEC_SQL="-s --execute='`cat ./sql/${file}`'"
-				cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} 2>&1 ${SSH_SUFFIX}"
-				sqlout=`sh -c "$cmd"`
-				if [[ $? -eq 0 ]]; then 
-					EXEC_SQL="-s --execute='INSERT INTO migrations (version) VALUES (${file_migration_no});'"
-					cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} ${SSH_SUFFIX}"
-					bash -c "$cmd"
-				else
-					echo ${sqlout}
-					exit 1
-				fi
-			fi
-		done
-	else
-		echo "`date` :Either the DB is down or the exit status returned by
-		the script shows ERROR."
-		echo "`date` :Exiting ..."
-		exit
+	# latest_migration will be an int
+	EXEC_SQL='-Ns -e "SELECT MAX(version) FROM migrations;"'
+	cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} ${DB_NAME} ${SSH_SUFFIX}"
+	latest_migration=`sh -c "$cmd"`
+	if [[ "${latest_migration}"  == *"ERROR 1146"* ]]; then
+		echo "`date` :Running initial migration"
+		latest_migration=0
 	fi
+
+	for file in `ls ./sql`; do
+		file_migration_no=`echo "$file" |cut -c1-3`
+		if [[ $latest_migration -lt $file_migration_no ]]; then
+			echo "`date` :Executing migration $file_migration_no from file $file...";
+			echo "`date` :__________________________________________";
+			echo "`date` :SQL OUTPUT:";
+			echo "`date` :__________________________________________";
+			EXEC_SQL="-s --execute='`cat ./sql/${file}`'"
+			cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} 2>&1 ${SSH_SUFFIX}"
+			sqlout=`sh -c "$cmd"`
+			if [[ $? -eq 0 ]]; then 
+				EXEC_SQL="-s --execute='INSERT INTO migrations (version) VALUES (${file_migration_no});'"
+				cmd="${SSH_PREFIX} ${MYSQL_CLIENT} ${EXEC_SQL} ${SSH_SUFFIX}"
+				bash -c "$cmd"
+			else
+				echo ${sqlout}
+				exit 1
+			fi
+		fi
+	done
 }
 
 # main function
