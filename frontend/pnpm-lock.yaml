@@ -6,6 +6,7 @@ dependencies:
   vue-class-component: 7.2.6_vue@2.6.12
   vue-property-decorator: 9.1.2_2dc4252c5371093c9ebcca71536ac4e9
   vue-router: 3.5.1
+  vuelidate: 0.7.6
   vuex: 3.6.2_vue@2.6.12
 devDependencies:
   '@types/jest': 24.9.1
@@ -10834,6 +10835,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg==
+  /vuelidate/0.7.6:
+    dev: false
+    engines:
+      node: '>= 4.0.0'
+      npm: '>= 3.0.0'
+    resolution:
+      integrity: sha512-suzIuet1jGcyZ4oUSW8J27R2tNrJ9cIfklAh63EbAkFjE380iv97BAiIeolRYoB9bF9usBXCu4BxftWN1Dkn3g==
   /vuex/3.6.2_vue@2.6.12:
     dependencies:
       vue: 2.6.12
@@ -11335,4 +11343,5 @@ specifiers:
   vue-property-decorator: ^9.1.2
   vue-router: ^3.2.0
   vue-template-compiler: ^2.6.11
+  vuelidate: ^0.7.6
   vuex: ^3.4.0
