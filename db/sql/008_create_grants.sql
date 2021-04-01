@@ -7,11 +7,4 @@ CREATE TABLE IF NOT EXISTS tbl_fact_grants(
        ,balance float(7,2)
        ,active ENUM('PENDING', 'APPROVED', 'DENIED')
        ,administrator smallint UNSIGNED
-       constraint fk_grant_id foreign key (grant_number)
-         references tbl_map_grant_users (grant_id)
-       constraint fk_purch_id foreign key (grant_id)
-         references tbl_fact_purchases (grant_number)
-        constraint fk_entity_id foreign key (id
-         references tbl_fact_granting_entity (id)
-
 );
