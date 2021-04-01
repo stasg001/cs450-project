@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS      (
+CREATE TABLE IF NOT EXISTS tbl_fact_grants(
         id int UNSIGNED NOT NULL auto_increment PRIMARY KEY,
         grant_number varchar(20),
         title varchar(30),
