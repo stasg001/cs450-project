@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS tbl_fact_users(
        update_date TimeStamp,
        user_role ENUM('FACULTY', 'ADMINISTRATOR'),
        department int UNSIGNED NOT NULL,
-       FOREIGN KEY department
+       FOREIGN KEY (department)
         REFERENCES tbl_fact_departments(id)
 );
