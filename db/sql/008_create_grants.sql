@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS tbl_fact_grants(
         original_amt float(7,2),
         balance float(7,2),
         status ENUM('PENDING', 'APPROVED', 'DENIED'),
-        administrator_id smallint UNSIGNED,
+        administrator_id int UNSIGNED,
         FOREIGN KEY (source_id)
                 REFERENCES tbl_fact_granting_entity(id),
         FOREIGN KEY (administrator_id)
