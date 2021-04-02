@@ -8,9 +8,13 @@ web:
   links:
     - php
 php:
-  image: php:7.2-fpm
+  build: .
   volumes: 
     - ../api:/cs450-backend
+  environment:
+    - MYSQL_DATABASE=cs450
+    - MYSQL_USER=cs450db_user
+    - MYSQL_PASSWORD=tomtit.TAD.inward
   links:
     - mysql
 
@@ -23,3 +27,5 @@ mysql:
   environment:
     - MYSQL_ROOT_PASSWORD=porch.SPIKY.lamia
     - MYSQL_DATABASE=cs450
+    - MYSQL_USER=cs450db_user
+    - MYSQL_PASSWORD=tomtit.TAD.inward
