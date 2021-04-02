@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS tbl_fact_purchases(
         order_date datetime,
         deliver_date datetime,
         cancel_date datetime,
-        FOREIGN KEY (grant_number)
+        FOREIGN KEY (grant_id)
                 REFERENCES tbl_fact_grants(id),
         FOREIGN KEY (purchaser_id)
                 REFERENCES tbl_fact_users(id)
