@@ -9,9 +9,24 @@ web:
     - php
 
 php:
-  image: php:7.3-fpm
+  build: .
   volumes: 
     - ../api:/cs450-backend
+  env_file:
+    - dev.env
+  links:
+    - mysql
+  
+mysql:
+  image: mysql:8.0.23
+  ports:
+    - "3306:3306"
+  volumes:
+    - ../db/sql:/docker-entrypoint-initdb.d
+  env_file:
+    - dev.env
+  environment:
+    - MYSQL_RANDOM_ROOT_PASSWORD=yes
 
 composer:
   image: composer:latest
