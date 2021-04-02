@@ -11,10 +11,8 @@ php:
   build: .
   volumes: 
     - ../api:/cs450-backend
-  environment:
-    - MYSQL_DATABASE=cs450
-    - MYSQL_USER=cs450db_user
-    - MYSQL_PASSWORD=tomtit.TAD.inward
+  env_file:
+    - dev.env
   links:
     - mysql
 
@@ -24,8 +22,7 @@ mysql:
     - "3306:3306"
   volumes:
     - ../db/sql:/docker-entrypoint-initdb.d
+  env_file:
+    - dev.env
   environment:
-    - MYSQL_ROOT_PASSWORD=porch.SPIKY.lamia
-    - MYSQL_DATABASE=cs450
-    - MYSQL_USER=cs450db_user
-    - MYSQL_PASSWORD=tomtit.TAD.inward
+    - MYSQL_RANDOM_ROOT_PASSWORD=yes
