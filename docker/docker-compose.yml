@@ -11,3 +11,15 @@ php:
   image: php:7.2-fpm
   volumes: 
     - ../api:/cs450-backend
+  links:
+    - mysql
+
+mysql:
+  image: mysql:8.0.23
+  ports:
+    - "3306:3306"
+  volumes:
+    - ../db/sql:/docker-entrypoint-initdb.d
+  environment:
+    - MYSQL_ROOT_PASSWORD=porch.SPIKY.lamia
+    - MYSQL_DATABASE=cs450
