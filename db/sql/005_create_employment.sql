@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS tbl_fact_employment(
         student_uin int UNSIGNED,
         etype ENUM('GRA', 'GTA', 'URA'),
         semester varchar(10),
-        faculty_id smallint UNSIGNED,
+        faculty_id int UNSIGNED,
         amount float(7,0),
         payment_type ENUM('STIPEND', 'SALARY'),
         workload smallint UNSIGNED,
