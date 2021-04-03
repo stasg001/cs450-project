@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS tbl_fact_users(
         email varchar(15) NOT NULL unique, 
         password varchar(100) NOT NULL,
         created_date Timestamp,
-        update_date Timestamp,
+        updated_date Timestamp,
         user_role ENUM('FACULTY', 'ADMINISTRATOR'),
         department int UNSIGNED NOT NULL,
         FOREIGN KEY (department)

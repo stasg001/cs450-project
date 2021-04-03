@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS tbl_fact_purchases(
         id int UNSIGNED NOT NULL auto_increment PRIMARY KEY,
         grant_id int UNSIGNED,
-        pname varchar(50),
+        name varchar(50),
         qty int UNSIGNED,
         url varchar(100),
         unit_cost float(7,2),
