@@ -1,14 +1,14 @@
 CREATE TABLE IF NOT EXISTS tbl_fact_employment(
-        id int UNSIGNED NOT NULL auto_increment PRIMARY KEY,
-        student_uin int UNSIGNED,
+        id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        student_uin INT UNSIGNED,
         type ENUM('GRA', 'GTA', 'URA'),
-        semester varchar(10),
-        faculty_id int UNSIGNED,
-        amount float(7,0),
+        semester VARCHAR(10),
+        faculty_id INT UNSIGNED,
+        amount FLOAT(7,0),
         payment_type ENUM('STIPEND', 'SALARY'),
-        workload smallint UNSIGNED,
-        start_date date,
-        end_date date,
+        workload SMALLINT UNSIGNED,
+        start_date TIMESTAMP,
+        end_date TIMESTAMP,
         FOREIGN KEY (student_uin)
                 REFERENCES tbl_fact_student(uin),
         FOREIGN KEY (faculty_id)

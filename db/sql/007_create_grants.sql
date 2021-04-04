@@ -1,12 +1,12 @@
 CREATE TABLE IF NOT EXISTS tbl_fact_grants(
-        id int UNSIGNED NOT NULL auto_increment PRIMARY KEY,
-        grant_number varchar(20),
-        title varchar(30),
-        source_id int UNSIGNED,
-        original_amt float(7,2),
-        balance float(7,2),
+        id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        grant_number VARCHAR(20),
+        title VARCHAR(30),
+        source_id INT UNSIGNED,
+        original_amt FLOAT(7,2),
+        balance FLOAT(7,2),
         status ENUM('PENDING', 'APPROVED', 'DENIED'),
-        administrator_id int UNSIGNED,
+        administrator_id INT UNSIGNED,
         FOREIGN KEY (source_id)
                 REFERENCES tbl_fact_granting_entity(id),
         FOREIGN KEY (administrator_id)
