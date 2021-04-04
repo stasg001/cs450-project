@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS tbl_fact_purchases(
         unit_cost FLOAT(7,2),
         total_cost FLOAT(7,2),
         purchaser_id INT UNSIGNED,
-        order_date TIMESTAMP,
+        order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         deliver_date TIMESTAMP,
         cancel_date TIMESTAMP,
         FOREIGN KEY (grant_id)
