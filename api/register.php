@@ -7,6 +7,7 @@ use App\Lib\Request;
 use App\Lib\Response;
 use App\Endpoints\User;
 use App\Endpoints\User\RegisterUserInfo;
+use App\Endpoints\User\RegistrationFailureException;
 
 Logger::enableSystemLogs();
 
@@ -25,7 +26,7 @@ try {
     );
 
     echo Response::ok()->toJSON($payload);
-} catch (InvalidArgumentException $e) {
+} catch (Exception $e) {
     echo Response::error()->toJSON(array(
         'message' => $e->getMessage(),
     ));
