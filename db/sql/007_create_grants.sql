@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS tbl_fact_grants(
         id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        grant_number VARCHAR(20),
-        title VARCHAR(30),
+        grant_number VARCHAR(255),
+        title VARCHAR(255),
         source_id INT UNSIGNED,
         original_amt FLOAT(7,2),
         balance FLOAT(7,2),

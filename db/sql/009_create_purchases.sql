@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS tbl_fact_purchases(
         id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
         grant_id INT UNSIGNED,
-        name VARCHAR(50),
+        name VARCHAR(255),
         qty INT UNSIGNED,
-        url VARCHAR(100),
+        url VARCHAR(255),
         unit_cost FLOAT(7,2),
         total_cost FLOAT(7,2),
         purchaser_id INT UNSIGNED,

@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS tbl_fact_employment(
         id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
         student_uin INT UNSIGNED,
         type ENUM('GRA', 'GTA', 'URA'),
-        semester VARCHAR(10),
+        semester VARCHAR(255),
         faculty_id INT UNSIGNED,
         amount FLOAT(7,0),
         payment_type ENUM('STIPEND', 'SALARY'),
