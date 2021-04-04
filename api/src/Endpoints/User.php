@@ -21,7 +21,7 @@ final class User {
             $payload['error'] = 'This is not fully implemented! But you have to AT LEAST give a user/password';
         }
 
-        $key = Config::get('KEY');
+        $key = Config::get('JWT_SHARED_KEY');
         return JWT::encode($payload, $key);
     }
 
