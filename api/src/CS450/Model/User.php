@@ -32,7 +32,7 @@ final class User {
             'uid' => 0
         );
 
-        return $this->jwt::encode($payload, $this->jwtKey);
+        return $this->jwt->encode($payload, $this->jwtKey);
     }
 
     public function register(RegisterUserInfo $userInfo): string {

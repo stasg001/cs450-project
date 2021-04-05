@@ -4,6 +4,11 @@ use PHPUnit\Framework\TestCase;
 use CS450\Lib\Request;
 
 final class RequestTest extends TestCase {
+    protected function setUp(): void
+    {
+        $_SERVER['REQUEST_URI'] = '';
+    }
+
     public function testCanBeCreated(): void {
         $_SERVER['REQUEST_METHOD'] = "GET";
 

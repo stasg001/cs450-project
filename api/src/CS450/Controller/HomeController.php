@@ -2,6 +2,9 @@
 
 namespace CS450\Controller;
 
+/**
+ * @codeCoverageIgnore
+ */
 class HomeController
 {
     public function __construct()
