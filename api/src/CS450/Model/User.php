@@ -42,14 +42,51 @@ final class User {
         return $this->jwt->encode($payload, $this->jwtKey);
     }
 
-    public function register(RegisterUserInfo $userInfo): string {
-        $sql = "INSERT INTO tbl_fact_users (name, email, password) VALUES (?, ?, ?)";
-
+    public function login(EmailAddress $email, Password $password) {
         $conn = $this->db->getConnection();
-        $stmt = $conn->prepare($sql);
+
+        $selectEmailQ = "SELECT id, password FROM tbl_fact_users WHERE email=?";
+        $stmt = $conn->prepare($selectEmailQ);
 
         if (!$stmt) {
-            $errMsg = sprintf("An error occurred preparing your query: %s - %s", $sql, $conn->error);
+            $errMsg = sprintf("An error occurred preparing your query: %s, %s", $selectEmailQ, $conn->error);
+            throw new \Exception($errMsg);
+        }
+
+        $executed = $stmt->bind_param(
+            "s",
+            $email,
+        ) && $stmt->execute();
+
+        if (!$executed) {
+            throw new \Exception($conn->error);
+        }
+
+        $stmt->bind_result($uid, $storedPassword);
+        $stmt->fetch();
+
+        $this->logger->debug(sprintf("verifying stored hash %s against new hash %s for user %d", $storedPassword, $password, $uid));
+
+        if (!$password->verifyhash($storedPassword)) {
+            throw new \Exception("Incorrect password");
+        }
+
+        $this->logger->info(sprintf(
+            "User (%s) has been authenticated",
+            $email
+        ));
+
+        return $this->makeJwt($uid);
+    }
+
+    public function register(RegisterUserInfo $userInfo): string {
+        $insertUserSql = "INSERT INTO tbl_fact_users (name, email, password, department) VALUES (?, ?, ?, 1)";
+
+        $conn = $this->db->getConnection();
+        $stmt = $conn->prepare($insertUserSql);
+
+        if (!$stmt) {
+            $errMsg = sprintf("An error occurred preparing your query: %s - %s", $insertUserSql, $conn->error);
             throw new \Exception($errMsg);
         }
 
@@ -71,47 +108,18 @@ final class User {
                 // check if passwords match.
                 // -> if so log the user in
                 // else -> redirect to login with error email exists
-
-                $selectEmailQ = "SELECT id, password FROM tbl_fact_users WHERE email=?";
-                $stmt = $conn->prepare($selectEmailQ);
-
-                if (!$stmt) {
-                    $errMsg = sprintf("An error occurred preparing your query: %s, %s", $selectEmailQ, $conn->error);
-                    throw new \Exception($errMsg);
-                }
-
-                $executed = $stmt->bind_param(
-                    "s",
+                return $this->login(
                     $userInfo->email,
-                ) && $stmt->execute();
-
-                if (!$executed) {
-                    throw new \Exception($conn->error);
-                }
-
-                $stmt->bind_result($uid, $storedPassword);
-                $stmt->fetch();
-
-                $logger->info("GOT ID " . $uid);
-
-                if ($userInfo->password->verifyhash($storedPassword)) {
-                    $this->logger->info(sprintf(
-                        "Found existing user (%s) with same password found. Logging in",
-                        $userInfo->email
-                    ));
-                    return $this->makeJwt($uid);
-                }
-
-                throw new \Exception("email exists");
-
-                // User exists but passwords dont match
+                    $userInfo->password,
+                );
             } else {
+                // Something went wrong at the DB level
                 throw new \Exception($conn->error);
             }
         }
 
         $uid = $conn->insert_id;
-        $this->logger->info(sprintf("Make new user id: %d", $uid));
+        $this->logger->info(sprintf("Created new user with id: %d", $uid));
 
         return $this->makeJwt(0);
     }
