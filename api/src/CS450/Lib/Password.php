@@ -25,4 +25,8 @@ final class Password {
             );
         }
     }
+
+    public function __toString() {
+        return $this->hashed;
+    }
 }
