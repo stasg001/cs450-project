@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-use App\Lib\Request;
+use CS450\Lib\Request;
 
 final class RequestTest extends TestCase {
     public function testCanBeCreated(): void {
@@ -61,13 +61,13 @@ final class RequestTest extends TestCase {
 
         $this->assertEquals(
             $req->getJSON(),
-            (object) array(
+            array(
                 "field1" => "ice cream",
                 "field2" => "🤷🏻 gotta test emoji amiright",
                 "arrays" => array(
                     "banana sandwiches", "hot dogs"
                 ),
-                "an object" => (object) array(
+                "an object" => array(
                     "getting" => "cray"
                 ),
             )
@@ -82,13 +82,13 @@ final class RequestTest extends TestCase {
 
         $this->assertEquals(
             $req->getJSON(),
-            (object) array(
+            array(
                 "field1" => "ice cream",
                 "field2" => "🤷🏻 gotta test emoji amiright",
                 "arrays" => array(
                     "banana sandwiches", "hot dogs"
                 ),
-                "an object" => (object) array(
+                "an object" => array(
                     "getting" => "cray"
                 ),
             )
