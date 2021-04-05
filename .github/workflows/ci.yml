@@ -83,7 +83,8 @@ jobs:
         run: docker-compose up -d
       - name: Sleep
         uses: jakejarvis/wait-action@master
-        time: '60s'
+        with:
+          time: '60s'
       - name: Check running containers
         run: docker ps
       - name: Run test suite
