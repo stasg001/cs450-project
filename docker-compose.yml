@@ -10,7 +10,9 @@ services:
       - ./apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
     env_file:
       - dev.env
-      
+    environment:
+      - XDEBUG_MODE=coverage
+
   mysql:
     image: mysql:8.0.23
     cap_add:
