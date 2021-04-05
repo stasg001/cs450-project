@@ -33,10 +33,6 @@ jobs:
           npm run build
       - name: ssh deploy
         uses: easingthemes/ssh-deploy@v2.1.5
-        env_file:
-        - ../../dev.env
-    environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
           REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
