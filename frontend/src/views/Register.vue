@@ -64,7 +64,7 @@
       </b-form-group>
 
     <b-form-group label="Enter your department:" label-for="department">
-        <b-form-select v-model="selected" :options="options"></b-form-select>
+        <b-form-select v-model="form.department" :options="options"></b-form-select>
       </b-form-group>
 
       <div class="ml-auto">
@@ -100,12 +100,12 @@ export default Vue.extend({
         email: "",
         name: "",
         password: "",
+        department: ""
       },
       verify: {
         password: "",
       },
       registrationRejectedMsg: "",
-      selected: null,
       options: []
     };
   },
